@@ -25,14 +25,14 @@ class ViewController: FormViewController {
         var tvColour: UIColor
         var cellColour: UIColor
 
-        if view.tag == 1 {
+        if view.tag == 81 {     // internal UI view tag of panel
             tvColour = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
             cellColour = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-        } else if view.tag == 2 {
+        } else if view.tag == 91 {
             tvColour = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-            cellColour = #colorLiteral(red: 0, green: 0.6035678983, blue: 1, alpha: 0.5)
+            cellColour = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         } else {
-            tvColour = #colorLiteral(red: 0, green: 0.5694751143, blue: 1, alpha: 1)
+            tvColour = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
             cellColour = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
         }
 
@@ -48,11 +48,8 @@ class ViewController: FormViewController {
                 cell.backgroundColor = cellColour
         }
 
-
-
-
-
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

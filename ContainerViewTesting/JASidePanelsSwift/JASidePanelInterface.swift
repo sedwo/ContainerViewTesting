@@ -4,7 +4,7 @@ import DeviceKit
 
 
 
-internal enum PanelStyle: Int {
+internal enum PanelMode: Int {
     case singleActive = 0
     case multipleActive
 }
@@ -16,12 +16,21 @@ internal enum PanelState: Int {
     case rightVisible
 }
 
+// Helps with UI view container tracking.
+private struct ContainerTags {
+    static let ROOT_VIEW    = -2
+    static let LEFT_VIEW    = 80
+    static let CENTER_VIEW  = 90
+    static let RIGHT_VIEW   = 100
+    static let TAP_VIEW     = 200
+}
+
 
 
 open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate {
 
     // size the left panel based on % of total screen width
-    var leftGapPercentage: CGFloat = 0.75
+    var leftGapPercentage: CGFloat = 0.50
 
     // size the left panel based on this fixed size. overrides leftGapPercentage
     var leftFixedWidth: CGFloat = 0.0
@@ -44,7 +53,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
 
 
     // size the right panel based on % of total screen width
-    var rightGapPercentage: CGFloat = 0.75
+    var rightGapPercentage: CGFloat = 0.50
 
     // size the right panel based on this fixed size. overrides rightGapPercentage
     var rightFixedWidth: CGFloat = 0.0
@@ -65,15 +74,18 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
     }
 
-    // push side panels instead of overlapping them
-    var pushesSidePanels: Bool = false
-
-    // Style the side panels with a shadow edge effect to indicate floating
-    var styleContainerWithShadow: Bool = false
-
 
 
     // MARK: - Animation
+
+    // should the center panel bounce when you are panning open a left/right panel.
+    var bounceOnSidePanelOpen: Bool = true
+
+    // should the center panel bounce when you are panning closed a left/right panel.
+    var bounceOnSidePanelClose: Bool = false
+
+    // while changing the center panel, should we bounce it offscreen?
+    var bounceOnCenterPanelChange: Bool = true
 
     // the minimum % of total screen width the view must move for panGesture to succeed
     var minimumMovePercentage: CGFloat = 0.15
@@ -87,21 +99,12 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     // how far the view should bounce
     var bouncePercentage: CGFloat = 0.1
 
-    // should the center panel bounce when you are panning open a left/right panel.
-    var bounceOnSidePanelOpen: Bool = true // defaults to YES
-
-    // should the center panel bounce when you are panning closed a left/right panel.
-    var bounceOnSidePanelClose: Bool = false // defaults to NO
-
-    // while changing the center panel, should we bounce it offscreen?
-    var bounceOnCenterPanelChange: Bool = false // defaults to YES
-
 
 
     // MARK: - Gesture Behavior
 
     // Determines whether the pan gesture is limited to the top ViewController in a UINavigationController/UITabBarController
-    var panningLimitedToTopViewController: Bool = true// default is YES
+    var panningLimitedToTopViewController: Bool = false // default is YES
 
     // Determines whether showing panels can be controlled through pan gestures, or only through buttons
     var recognizesPanGesture: Bool = true // default is YES
@@ -177,6 +180,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
                         tapGesture.require(toFail: panGesture)
                     }
 
+                    _tapView?.tag = ContainerTags.TAP_VIEW
                     centerPanelContainer.addSubview(_tapView!)
                 }
             }
@@ -201,6 +205,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
                 }
 
                 _leftPanel = newValue
+                _leftPanel.view.tag = ContainerTags.LEFT_VIEW+1
 
                 if _leftPanel != nil {
                     addChildViewController(_leftPanel)
@@ -214,6 +219,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
             }
 
         }
+
         get {
             return _leftPanel
         }
@@ -232,6 +238,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
                 }
 
                 _centerPanel = newValue
+                _centerPanel.view.tag = ContainerTags.CENTER_VIEW+1
 
                 _centerPanel.addObserver(self, forKeyPath: "viewControllers", options: [], context: ja_kvoContext)
                 _centerPanel.addObserver(self, forKeyPath: "view", options: .initial, context: ja_kvoContext)
@@ -262,8 +269,6 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
                         self.showCenterPanel(animated: true, bounce: false)
                 })
             }
-
-
         }
 
         get {
@@ -283,6 +288,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
                 }
 
                 _rightPanel = newValue
+                _rightPanel.view.tag = ContainerTags.RIGHT_VIEW+1
 
                 if _rightPanel != nil {
                     addChildViewController(_rightPanel)
@@ -303,44 +309,51 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
 
     // MARK: - style
 
-    private var _style: PanelStyle = .singleActive // default is JASidePanelSingleActive
-    var style: PanelStyle {
+    private var _mode: PanelMode = .singleActive // default is .singleActive
+    var mode: PanelMode {
         set {
-            if newValue != _style {
-                _style = newValue
+            if newValue != _mode {
+                _mode = newValue
                 if isViewLoaded {
                     configureContainers()
                     layoutSideContainers(animate: false, duration: 0.0)
                 }
             }
         }
+
         get {
-            return _style
+            return _mode
         }
     }
 
 
-    // The currently visible panel
-    var visiblePanel: UIViewController!
-
     // If set to yes, "shouldAutorotateToInterfaceOrientation:" will be passed to visiblePanel instead of handled directly
-    var shouldDelegateAutorotateToVisiblePanel: Bool = true // defaults to YES
+    var shouldDelegateAutorotateToVisiblePanel: Bool = false
 
-    // Determines whether or not the panel's views are removed when not visble. If YES, rightPanel & leftPanel's views are eligible for viewDidUnload
-    var canUnloadRightPanel: Bool = false   // defaults to NO
-    var canUnloadLeftPanel: Bool = false    // defaults to NO
+    // 'Push' vs 'Reveal' side panels into view
+    // 'Push' = side panels are inline with the center panel, and pan with the center panel to make room for side panel
+    // 'Reveal' = side panels are in the background, overlapped by the center panel, and you 'reveal' them by sliding center panel out of the way
+    var pushesSidePanels: Bool = true
+
+    // Style the side panels with a shadow edge effect to indicate floating
+    var styleContainerWithShadow: Bool = false
+
+    // Determines whether or not the panel's views are removed when not visble. If YES, rightPanel & leftPanel's views are eligible for release
+    // of their references to the view controller’s view if they are not being used.
+    var canUnloadRightPanel: Bool = false
+    var canUnloadLeftPanel: Bool = false
 
     // Determines whether or not the panel's views should be resized when they are displayed. If yes, the views will be resized to their visible width
-    var shouldResizeRightPanel: Bool = false// defaults to NO
-    var shouldResizeLeftPanel: Bool = false // defaults to NO
+    var shouldResizeRightPanel: Bool = true
+    var shouldResizeLeftPanel: Bool = true
 
     // Determines whether or not the center panel can be panned beyound the the visible area of the side panels
-    var allowRightOverpan: Bool = false     // defaults to YES
-    var allowLeftOverpan: Bool = false      // defaults to YES
+    var allowRightOverpan: Bool = false
+    var allowLeftOverpan: Bool = false
 
     // Determines whether or not the left or right panel can be swiped into view. Use if only way to view a panel is with a button
-    var allowLeftSwipe: Bool = true         // defaults to YES
-    var allowRightSwipe: Bool = true        // defaults to YES
+    var allowLeftSwipe: Bool = true
+    var allowRightSwipe: Bool = true
 
     // Containers for the panels.
     var leftPanelContainer: UIView!
@@ -351,6 +364,9 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     var locationBeforePan = CGPoint.zero
 
     let ja_kvoContext: UnsafeMutableRawPointer? = nil
+
+    // The currently visible panel
+    var visiblePanel: UIViewController!
 
 
     // MARK: - Icon
@@ -394,7 +410,8 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
 
     private func commonInit() {
         DDLogInfo("")
-        style = .singleActive
+        mode = .singleActive
+        bounceOnSidePanelOpen = !pushesSidePanels
     }
 
 
@@ -405,17 +422,22 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         super.viewDidLoad()
 
         view.backgroundColor = #colorLiteral(red: 0, green: 0.5694751143, blue: 1, alpha: 1)
-        view.tag = 99   // root
+        view.tag = ContainerTags.ROOT_VIEW
 
         view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
         centerPanelContainer = UIView(frame: view.bounds)
+        centerPanelContainer.tag = ContainerTags.CENTER_VIEW
         centerPanelRestingFrame = centerPanelContainer.frame
         centerPanelHidden = false
+
         leftPanelContainer = UIView(frame: view.bounds)
         leftPanelContainer.isHidden = true
+        leftPanelContainer.tag = ContainerTags.LEFT_VIEW
+
         rightPanelContainer = UIView(frame: view.bounds)
         rightPanelContainer.isHidden = true
+        rightPanelContainer.tag = ContainerTags.RIGHT_VIEW
 
         configureContainers()
 

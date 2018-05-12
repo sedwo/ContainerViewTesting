@@ -46,7 +46,7 @@ extension JASidePanelController {
         var leftFrame = view.bounds
         var rightFrame = view.bounds
 
-        if style == .multipleActive {
+        if mode == .multipleActive {
             // left panel container
             leftFrame.size.width = leftVisibleWidth
             leftFrame.origin.x = centerPanelContainer.frame.origin.x - leftFrame.size.width
@@ -194,7 +194,7 @@ extension JASidePanelController {
             var frame = centerPanelRestingFrame
             frame.origin.x += round(correctMovement(movement: translate.x))
 
-            if style == .multipleActive {
+            if mode == .multipleActive {
                 frame.size.width = view.bounds.size.width - frame.origin.x
             }
             centerPanelContainer.frame = frame
@@ -209,7 +209,7 @@ extension JASidePanelController {
             }
 
             // adjust side panel locations, if needed
-            if style == .multipleActive || pushesSidePanels {
+            if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0)
             }
 
@@ -292,7 +292,7 @@ extension JASidePanelController {
         } else if state == .rightVisible && !allowRightOverpan {
             if position < -rightVisibleWidth {
                 return 0.0
-            } else if (style == .multipleActive || pushesSidePanels) && position > 0.0 {
+            } else if (mode == .multipleActive || pushesSidePanels) && position > 0.0 {
                 return -centerPanelRestingFrame.origin.x
             } else if position > rightPanelContainer.frame.origin.x {
                 return rightPanelContainer.frame.origin.x - centerPanelRestingFrame.origin.x
@@ -301,7 +301,7 @@ extension JASidePanelController {
         } else if state == .leftVisible && !allowLeftOverpan {
             if position > leftVisibleWidth {
                 return 0.0
-            } else if (style == .multipleActive || pushesSidePanels) && position < 0.0 {
+            } else if (mode == .multipleActive || pushesSidePanels) && position < 0.0 {
                 return -centerPanelRestingFrame.origin.x
             } else if position < leftPanelContainer.frame.origin.x {
                 return leftPanelContainer.frame.origin.x - centerPanelRestingFrame.origin.x
@@ -350,7 +350,7 @@ extension JASidePanelController {
         placeButtonForLeftPanel()
 
         // for the multi-active style, it looks better if the new center starts out in it's fullsize and slides in
-        if style == .multipleActive {
+        if mode == .multipleActive {
             switch previousState {
             case .leftVisible:
                 var frame = centerPanelContainer.frame
@@ -405,7 +405,7 @@ extension JASidePanelController {
     }
 
 
-    func unloadPanels() {
+    func unloadPanelsFromView() {
         if canUnloadLeftPanel && leftPanel.isViewLoaded {
             leftPanel.view.removeFromSuperview()
         }
@@ -440,7 +440,7 @@ extension JASidePanelController {
                        animations: { [unowned self] () -> Void in
             self.centerPanelContainer.frame = self.centerPanelRestingFrame
             self.styleContainer(container: self.centerPanelContainer, animate: true, duration: TimeInterval(duration))
-            if self.style == .multipleActive || self.pushesSidePanels {
+            if self.mode == .multipleActive || self.pushesSidePanels {
                 self.layoutSideContainers(animate: false, duration: 0.0)
             }
             }, completion: { [unowned self] (finished: Bool) -> Void in
@@ -485,17 +485,17 @@ extension JASidePanelController {
         switch state {
         case .centerVisible:
             frame.origin.x = 0.0
-            if style == .multipleActive {
+            if mode == .multipleActive {
                 frame.size.width = view.bounds.size.width
             }
         case .leftVisible:
             frame.origin.x = leftVisibleWidth
-            if style == .multipleActive {
+            if mode == .multipleActive {
                 frame.size.width = view.bounds.size.width - leftVisibleWidth
             }
         case .rightVisible:
             frame.origin.x = -rightVisibleWidth
-            if style == .multipleActive {
+            if mode == .multipleActive {
                 frame.origin.x = 0.0
                 frame.size.width = view.bounds.size.width - rightVisibleWidth
             }
@@ -522,12 +522,12 @@ extension JASidePanelController {
             centerPanelContainer.frame = centerPanelRestingFrame
             styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
-            if style == .multipleActive || pushesSidePanels {
+            if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
             }
         }
 
-        if style == .singleActive {
+        if mode == .singleActive {
             tapView = UIView()
         }
 
@@ -546,12 +546,12 @@ extension JASidePanelController {
             centerPanelContainer.frame = centerPanelRestingFrame
             styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
-            if style == .multipleActive || pushesSidePanels {
+            if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
             }
         }
 
-        if style == .singleActive {
+        if mode == .singleActive {
             tapView = UIView()
         }
 
@@ -567,19 +567,19 @@ extension JASidePanelController {
             animateCenterPanel(shouldBounce: shouldBounce, completion: {(finished) -> Void in
                 self.leftPanelContainer.isHidden = true
                 self.rightPanelContainer.isHidden = true
-                self.unloadPanels()
+                self.unloadPanelsFromView()
             })
         } else {
             centerPanelContainer.frame = centerPanelRestingFrame
             styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
-            if style == .multipleActive || pushesSidePanels {
+            if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
             }
 
             leftPanelContainer.isHidden = true
             rightPanelContainer.isHidden = true
-            unloadPanels()
+            unloadPanelsFromView()
         }
 
         tapView = nil
@@ -643,7 +643,7 @@ extension JASidePanelController {
         if context == ja_kvoContext {
             if keyPath! == "view" {
                 if centerPanel.isViewLoaded && recognizesPanGesture {
-                    addPanGestureToView(view: centerPanel.view)
+                    _ = addPanGestureToView(view: centerPanel.view)
                 }
             } else if keyPath! == "viewControllers" && object as? UIViewController == centerPanel {
                 // view controllers have changed, need to replace the button

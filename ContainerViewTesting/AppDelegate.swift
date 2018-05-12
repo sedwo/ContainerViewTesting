@@ -36,7 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.backgroundColor = UIColor.darkGray
+        self.window?.backgroundColor = #colorLiteral(red: 1, green: 0.5212053061, blue: 1, alpha: 1)
+        self.window?.tag = -1
 
 
 
@@ -61,6 +62,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = sidePanelController
         self.window?.makeKeyAndVisible()
 
+
+//        sidePanelController.showLeftPanel(animated: true)
+//        sidePanelController.hideCenterPanel()
 
 
         // if iPad
