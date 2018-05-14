@@ -2,4 +2,70 @@
 <Bucket
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ContainerViewTesting/JASidePanelsSwift/JASidePanelController.swift"
+            timestampString = "547998851.1800801"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
+            landmarkName = "showLeftPanel(animated:bounce:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ContainerViewTesting/JASidePanelsSwift/JASidePanelInterface.swift"
+            timestampString = "547866518.153676"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
+            landmarkName = "centerPanelRestingFrame"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ContainerViewTesting.JASidePanelController.centerPanelRestingFrame.willset : __C.CGRect"
+                  moduleName = "ContainerViewTesting"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sedwo/AppliedPDA.com/dev/Source/ContainerViewTesting/ContainerViewTesting/JASidePanelsSwift/JASidePanelInterface.swift"
+                  timestampString = "547839837.105505"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "393"
+                  endingLineNumber = "393"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #1 : @autoclosure () -&gt; Swift.String in ContainerViewTesting.JASidePanelController.centerPanelRestingFrame.willset : __C.CGRect"
+                  moduleName = "ContainerViewTesting"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sedwo/AppliedPDA.com/dev/Source/ContainerViewTesting/ContainerViewTesting/JASidePanelsSwift/JASidePanelInterface.swift"
+                  timestampString = "547839837.107428"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "393"
+                  endingLineNumber = "393"
+                  offsetFromSymbolStart = "31">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

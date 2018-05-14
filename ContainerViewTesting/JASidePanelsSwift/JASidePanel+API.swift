@@ -17,12 +17,12 @@ internal enum PanelState: Int {
 }
 
 // Helps with UI view container tracking.
-private struct ContainerTags {
+internal struct ContainerTags {
     static let ROOT_VIEW    = -2
-    static let LEFT_VIEW    = 80
-    static let CENTER_VIEW  = 90
-    static let RIGHT_VIEW   = 100
-    static let TAP_VIEW     = 200
+    static let LEFT_VIEW    = 100
+    static let CENTER_VIEW  = 200
+    static let RIGHT_VIEW   = 300
+    static let TAP_VIEW     = 99
 }
 
 
@@ -39,10 +39,12 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _leftVisibleWidth: CGFloat = 0.0
     var leftVisibleWidth: CGFloat {
         set {
+//            DDLogVerbose("set")
             _leftVisibleWidth = newValue
         }
 
         get {
+//            DDLogVerbose("get")
             if centerPanelHidden && shouldResizeLeftPanel {
                 return view.bounds.size.width
             } else {
@@ -62,10 +64,12 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _rightVisibleWidth: CGFloat = 0.0
     var rightVisibleWidth: CGFloat {
         set {
+//            DDLogVerbose("set")
             _rightVisibleWidth = newValue
         }
 
         get {
+//            DDLogVerbose("get")
             if centerPanelHidden && shouldResizeRightPanel {
                 return view.bounds.size.width
             } else {
@@ -88,7 +92,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     var bounceOnCenterPanelChange: Bool = true
 
     // the minimum % of total screen width the view must move for panGesture to succeed
-    var minimumMovePercentage: CGFloat = 0.15
+    var minimumMovePercentage: CGFloat = 0.12
 
     // the maximum time panel opening/closing should take. Actual time may be less if panGesture has already moved the view.
     var maximumAnimationDuration: CGFloat = 0.2
@@ -104,10 +108,50 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     // MARK: - Gesture Behavior
 
     // Determines whether the pan gesture is limited to the top ViewController in a UINavigationController/UITabBarController
-    var panningLimitedToTopViewController: Bool = false // default is YES
+    var panningLimitedToTopViewController: Bool = false
 
     // Determines whether showing panels can be controlled through pan gestures, or only through buttons
-    var recognizesPanGesture: Bool = true // default is YES
+    var recognizesPanGesture: Bool = true
+
+    // Determines whether to support closing side panels upon tap gesture within the center panel
+    var recognizesTapGesture: Bool = false
+
+
+    private var _tapView: UIView?
+    var tapView: UIView? {
+        set {
+//            DDLogVerbose("set")
+            if newValue != _tapView {
+                if _tapView != nil {
+                    _tapView!.removeFromSuperview()
+                }
+
+                if newValue != nil {
+                    _tapView = newValue!
+                    _tapView!.frame = centerPanelContainer.bounds
+                    _tapView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+                    let tapGesture = addTapGestureToView(view: _tapView!)
+
+                    if recognizesPanGesture {
+                        let panGesture = addPanGestureToView(view: _tapView!)
+                        tapGesture.require(toFail: panGesture)
+                    }
+
+                    _tapView?.tag = ContainerTags.TAP_VIEW
+
+                    if recognizesTapGesture {
+                        centerPanelContainer.addSubview(_tapView!)
+                    }
+                }
+            }
+
+        }
+        get {
+//            DDLogVerbose("get")
+            return _tapView
+        }
+    }
 
 
 
@@ -119,6 +163,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     var state: PanelState {
         set {
             if _state != newValue {
+//                DDLogVerbose("set = \(newValue.rawValue)")
                 _state = newValue
 
                 switch _state {
@@ -142,6 +187,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
 
         get {
+//            DDLogVerbose("get = \(_state.rawValue)")
             return _state
         }
     }
@@ -151,45 +197,16 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _centerPanelHidden: Bool = false
     var centerPanelHidden: Bool {
         set {
+//            DDLogVerbose("set")
             setCenterPanelHidden(isHidden: _centerPanelHidden, animated: false, duration: 0.0)
         }
 
         get {
+//            DDLogVerbose("get")
             return _centerPanelHidden
         }
     }
 
-
-    private var _tapView: UIView?
-    var tapView: UIView? {
-        set {
-            if newValue != _tapView {
-                if _tapView != nil {
-                    _tapView!.removeFromSuperview()
-                }
-
-                if newValue != nil {
-                    _tapView = newValue!
-                    _tapView!.frame = centerPanelContainer.bounds
-                    _tapView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-                    let tapGesture = addTapGestureToView(view: _tapView!)
-
-                    if recognizesPanGesture {
-                        let panGesture = addPanGestureToView(view: _tapView!)
-                        tapGesture.require(toFail: panGesture)
-                    }
-
-                    _tapView?.tag = ContainerTags.TAP_VIEW
-                    centerPanelContainer.addSubview(_tapView!)
-                }
-            }
-
-        }
-        get {
-            return _tapView
-        }
-    }
 
 
     // MARK: - set the panels
@@ -197,6 +214,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _leftPanel: UIViewController!
     var leftPanel: UIViewController! {
         set {
+//            DDLogVerbose("set")
             if newValue != _leftPanel {
                 if _leftPanel != nil {
                     _leftPanel.willMove(toParentViewController: nil)
@@ -221,6 +239,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
 
         get {
+//            DDLogVerbose("get")
             return _leftPanel
         }
     }
@@ -229,6 +248,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _centerPanel: UIViewController!
     var centerPanel: UIViewController! {
         set {
+//            DDLogVerbose("set")
             let previous = _centerPanel
 
             if newValue != _centerPanel {
@@ -272,6 +292,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
 
         get {
+//            DDLogVerbose("get")
             return _centerPanel
         }
     }
@@ -280,6 +301,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _rightPanel: UIViewController!
     var rightPanel: UIViewController! {
         set {
+//            DDLogVerbose("set")
             if newValue != _rightPanel {
                 if _rightPanel != nil {
                     _rightPanel.willMove(toParentViewController: nil)
@@ -302,6 +324,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
 
         get {
+//            DDLogVerbose("get")
             return _rightPanel
         }
     }
@@ -312,6 +335,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     private var _mode: PanelMode = .singleActive // default is .singleActive
     var mode: PanelMode {
         set {
+//            DDLogVerbose("set")
             if newValue != _mode {
                 _mode = newValue
                 if isViewLoaded {
@@ -322,6 +346,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         }
 
         get {
+//            DDLogVerbose("get")
             return _mode
         }
     }
@@ -333,15 +358,18 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     // 'Push' vs 'Reveal' side panels into view
     // 'Push' = side panels are inline with the center panel, and pan with the center panel to make room for side panel
     // 'Reveal' = side panels are in the background, overlapped by the center panel, and you 'reveal' them by sliding center panel out of the way
-    var pushesSidePanels: Bool = true
+    var pushesSidePanels: Bool = false
 
+//    var floatingSidePanels: Bool = true
+
+    // <DISABLED FOR NOW>
     // Style the side panels with a shadow edge effect to indicate floating
-    var styleContainerWithShadow: Bool = false
+//    var styleContainerWithShadow: Bool = false
 
     // Determines whether or not the panel's views are removed when not visble. If YES, rightPanel & leftPanel's views are eligible for release
     // of their references to the view controller’s view if they are not being used.
-    var canUnloadRightPanel: Bool = false
-    var canUnloadLeftPanel: Bool = false
+    var canUnloadRightPanel: Bool = true
+    var canUnloadLeftPanel: Bool = true
 
     // Determines whether or not the panel's views should be resized when they are displayed. If yes, the views will be resized to their visible width
     var shouldResizeRightPanel: Bool = true
@@ -360,7 +388,12 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     var rightPanelContainer: UIView!
     var centerPanelContainer: UIView!
 
-    var centerPanelRestingFrame = CGRect.zero
+    var centerPanelRestingFrame: CGRect = .zero {
+        willSet {
+            DDLogVerbose("\(newValue)")
+        }
+    }
+
     var locationBeforePan = CGPoint.zero
 
     let ja_kvoContext: UnsafeMutableRawPointer? = nil
@@ -374,6 +407,7 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
     static let defaultImage: UIImage = {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 20, height: 13))
         return renderer.image { ctx in
+            DDLogDebug("defaultImage")
             ctx.cgContext.setFillColor(UIColor.black.cgColor)
             ctx.cgContext.fill(CGRect(x: 0, y: 0, width: 20, height: 1))
             ctx.cgContext.fill(CGRect(x: 0, y: 5, width: 20, height: 1))
@@ -393,6 +427,84 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
 
 
 
+    // MARK: - Public Methods
+
+    func leftButtonForCenterPanel() -> UIBarButtonItem {
+        DDLogInfo("")
+        return UIBarButtonItem(image: JASidePanelController.defaultImage,
+                               style: .plain,
+                               target: self,
+                               action: #selector(toggleLeftPanel))
+    }
+
+
+    public func showLeftPanel(animated: Bool) {
+        DDLogInfo("")
+        showLeftPanelAnimated(animated: animated)
+    }
+
+
+    public func showRightPanel(animated: Bool) {
+        DDLogInfo("")
+        showRightPanelAnimated(animated: animated)
+    }
+
+
+    public func showCenterPanel(animated: Bool) {
+        DDLogInfo("")
+        showCenterPanelAnimated(animated: animated)
+    }
+
+
+    public func showLeftPanelAnimated(animated: Bool) {
+        DDLogInfo("")
+        showLeftPanel(animated: animated, bounce: false)
+    }
+
+
+    public func showRightPanelAnimated(animated: Bool) {
+        DDLogInfo("")
+        showRightPanel(animated: animated, bounce: false)
+    }
+
+
+    func showCenterPanelAnimated(animated: Bool) {
+        DDLogInfo("")
+        // make sure center panel isn't hidden
+        if centerPanelHidden {
+            centerPanelHidden = false
+            unhideCenterPanel()
+        }
+
+        showCenterPanel(animated: animated, bounce: false)
+    }
+
+
+    @objc func toggleLeftPanel(sender: AnyObject) {
+        DDLogInfo("")
+        let shouldAnimate = false
+
+        if state == .leftVisible {
+            showCenterPanel(animated: shouldAnimate, bounce: false)
+        } else if state == .centerVisible {
+            showLeftPanel(animated: shouldAnimate, bounce: false)
+        }
+
+    }
+
+
+    func toggleRightPanel(sender: AnyObject) {
+        DDLogInfo("")
+        if state == .rightVisible {
+            showCenterPanel(animated: true, bounce: false)
+        } else if state == .centerVisible {
+            showRightPanel(animated: true, bounce: false)
+        }
+
+    }
+
+
+
     // MARK: - Initializers(...)
 
     public init() {
@@ -402,145 +514,19 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         self.commonInit()
     }
 
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         DDLogInfo("")
         fatalError("")
     }
 
+
     private func commonInit() {
         DDLogInfo("")
+        // Defaults
         mode = .singleActive
         bounceOnSidePanelOpen = !pushesSidePanels
-    }
-
-
-
-    // MARK: - Lifecycle Methods
-
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.backgroundColor = #colorLiteral(red: 0, green: 0.5694751143, blue: 1, alpha: 1)
-        view.tag = ContainerTags.ROOT_VIEW
-
-        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-
-        centerPanelContainer = UIView(frame: view.bounds)
-        centerPanelContainer.tag = ContainerTags.CENTER_VIEW
-        centerPanelRestingFrame = centerPanelContainer.frame
-        centerPanelHidden = false
-
-        leftPanelContainer = UIView(frame: view.bounds)
-        leftPanelContainer.isHidden = true
-        leftPanelContainer.tag = ContainerTags.LEFT_VIEW
-
-        rightPanelContainer = UIView(frame: view.bounds)
-        rightPanelContainer.isHidden = true
-        rightPanelContainer.tag = ContainerTags.RIGHT_VIEW
-
-        configureContainers()
-
-        view.addSubview(centerPanelContainer)
-        view.addSubview(leftPanelContainer)
-        view.addSubview(rightPanelContainer)
-
-        state = .centerVisible
-        swapCenter(previous: UIViewController(), previousState: .centerVisible, with: centerPanel)
-        view.bringSubview(toFront: centerPanelContainer)
-    }
-
-
-    override open func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        // ensure correct view dimensions
-        layoutSideContainers(animate: false, duration: 0.0)
-        layoutSidePanels()
-        centerPanelContainer.frame = adjustCenterFrame()
-        styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
-    }
-
-
-    // Account for possible rotation while view appearing
-    override open func viewDidAppear(_ animated: Bool) {
-        _ = adjustCenterFrame()
-        super.viewDidAppear(animated)
-    }
-
-
-    open override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-
-        centerPanelContainer.frame = adjustCenterFrame()
-        layoutSideContainers(animate: true, duration: 0.0)
-        layoutSidePanels()
-        styleContainer(container: centerPanelContainer, animate: true, duration: 0.0)
-        if centerPanelHidden {
-            var frame: CGRect = centerPanelContainer.frame
-            frame.origin.x = state == .leftVisible ? centerPanelContainer.frame.size.width : -centerPanelContainer.frame.size.width
-            centerPanelContainer.frame = frame
-        }
-    }
-
-
-    override open func updateViewConstraints() {
-        super.updateViewConstraints()
-//        DDLogInfo("")
-    }
-
-
-    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-//        DDLogInfo("")
-        view.setNeedsUpdateConstraints()
-    }
-
-
-    override open var shouldAutorotate: Bool {
-        if let panel = visiblePanel {
-            if shouldDelegateAutorotateToVisiblePanel && panel.responds(to: #selector(getter: self.shouldAutorotate)) {
-                return panel.shouldAutorotate
-            }
-        }
-
-        return true
-    }
-
-
-    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if let panel = visiblePanel {
-            if shouldDelegateAutorotateToVisiblePanel && panel.responds(to: #selector(getter: self.supportedInterfaceOrientations)) {
-                return panel.supportedInterfaceOrientations
-            }
-        }
-
-        return UIInterfaceOrientationMask.all
-    }
-
-/*
-    override public func willAnimateRotation(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
-        centerPanelContainer.frame = _adjustCenterFrame()
-        _layoutSideContainers(animate: true, duration: duration)
-        _layoutSidePanels()
-        styleContainer(container: centerPanelContainer, animate: true, duration: duration)
-        if centerPanelHidden {
-            var frame = centerPanelContainer.frame
-            frame.origin.x = state == .JASidePanelLeftVisible ? centerPanelContainer.frame.size.width : -centerPanelContainer.frame.size.width
-            centerPanelContainer.frame = frame
-        }
-    }
-*/
-
-    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        DDLogInfo("")
-        view.setNeedsUpdateConstraints()
-    }
-
-    override open func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        DDLogError("")
     }
 
 
@@ -549,6 +535,5 @@ open class JASidePanelController: UIViewController, UIGestureRecognizerDelegate 
         centerPanel?.removeObserver(self, forKeyPath: "view")
         centerPanel?.removeObserver(self, forKeyPath: "viewControllers")
     }
-
 
 }

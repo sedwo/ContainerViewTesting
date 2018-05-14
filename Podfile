@@ -35,5 +35,9 @@ target 'ContainerViewTesting' do
   # https://github.com/konoma/fps-counter
   pod 'FPSCounter'
 
+  # FAPanels - Side menus with multiple transitions/animations
+  # https://github.com/fahidattique55/FAPanels
+  #  pod 'FAPanels'
+
 
 end

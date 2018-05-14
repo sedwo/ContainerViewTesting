@@ -7,32 +7,62 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7509AA3820A88E9300AE652B /* LeftSideVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509AA3520A88E9200AE652B /* LeftSideVC.swift */; };
+		7509AA3920A88E9300AE652B /* CenterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509AA3620A88E9200AE652B /* CenterVC.swift */; };
+		7509AA3A20A88E9300AE652B /* RightSideVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509AA3720A88E9200AE652B /* RightSideVC.swift */; };
+		7535669720A93C17005A5E7A /* LeftSideVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669620A93C17005A5E7A /* LeftSideVC2.swift */; };
+		7535669F20A96356005A5E7A /* JASidePanel+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669A20A96356005A5E7A /* JASidePanel+API.swift */; };
+		753566A020A96356005A5E7A /* JASidePanelController+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669B20A96356005A5E7A /* JASidePanelController+Gestures.swift */; };
+		753566A120A96356005A5E7A /* JASidePanelController+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669C20A96356005A5E7A /* JASidePanelController+Lifecycle.swift */; };
+		753566A220A96356005A5E7A /* JASidePanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669D20A96356005A5E7A /* JASidePanelController.swift */; };
+		753566A320A96356005A5E7A /* UIViewController+JASidePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7535669E20A96356005A5E7A /* UIViewController+JASidePanel.swift */; };
+		753566B020A9C8F5005A5E7A /* Collection+FAPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566A620A9C8F5005A5E7A /* Collection+FAPanel.swift */; };
+		753566B120A9C8F5005A5E7A /* FAPanel+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566A720A9C8F5005A5E7A /* FAPanel+Animations.swift */; };
+		753566B220A9C8F5005A5E7A /* FAPanel+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566A820A9C8F5005A5E7A /* FAPanel+Gestures.swift */; };
+		753566B320A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566A920A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift */; };
+		753566B420A9C8F5005A5E7A /* FAPanel+KVO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AA20A9C8F5005A5E7A /* FAPanel+KVO.swift */; };
+		753566B520A9C8F5005A5E7A /* FAPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AB20A9C8F5005A5E7A /* FAPanel.swift */; };
+		753566B620A9C8F5005A5E7A /* FAPanelConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AC20A9C8F5005A5E7A /* FAPanelConfigurations.swift */; };
+		753566B720A9C8F5005A5E7A /* UIImage+FAPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AD20A9C8F5005A5E7A /* UIImage+FAPanel.swift */; };
+		753566B820A9C8F5005A5E7A /* UIView+FAPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AE20A9C8F5005A5E7A /* UIView+FAPanel.swift */; };
+		753566B920A9C8F5005A5E7A /* UIViewController+FAPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753566AF20A9C8F5005A5E7A /* UIViewController+FAPanel.swift */; };
 		756FEFE120A4842C00428D12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756FEFE020A4842C00428D12 /* AppDelegate.swift */; };
-		756FEFE320A4842C00428D12 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756FEFE220A4842C00428D12 /* ViewController.swift */; };
 		756FEFE620A4842C00428D12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 756FEFE420A4842C00428D12 /* Main.storyboard */; };
 		756FEFE820A4842C00428D12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 756FEFE720A4842C00428D12 /* Assets.xcassets */; };
 		756FEFEB20A4842C00428D12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 756FEFE920A4842C00428D12 /* LaunchScreen.storyboard */; };
 		75E73B1720A4864A00A08E0C /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E73B1620A4864A00A08E0C /* UIView.swift */; };
-		75F3225F20A4995100B1BE74 /* JASidePanelInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F3225C20A4995100B1BE74 /* JASidePanelInterface.swift */; };
-		75F3226020A4995100B1BE74 /* JASidePanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F3225D20A4995100B1BE74 /* JASidePanelController.swift */; };
-		75F3226120A4995100B1BE74 /* UIViewController+JASidePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F3225E20A4995100B1BE74 /* UIViewController+JASidePanel.swift */; };
 		A4D55A22FA77CC29F6C3DA3A /* Pods_ContainerViewTesting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A99422677E167E8B80E747 /* Pods_ContainerViewTesting.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4DE7E90FC86435C72857102C /* Pods-ContainerViewTesting.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContainerViewTesting.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ContainerViewTesting/Pods-ContainerViewTesting.debug.xcconfig"; sourceTree = "<group>"; };
 		53A99422677E167E8B80E747 /* Pods_ContainerViewTesting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ContainerViewTesting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7509AA3520A88E9200AE652B /* LeftSideVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftSideVC.swift; sourceTree = "<group>"; };
+		7509AA3620A88E9200AE652B /* CenterVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterVC.swift; sourceTree = "<group>"; };
+		7509AA3720A88E9200AE652B /* RightSideVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightSideVC.swift; sourceTree = "<group>"; };
+		7535669620A93C17005A5E7A /* LeftSideVC2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftSideVC2.swift; sourceTree = "<group>"; };
+		7535669A20A96356005A5E7A /* JASidePanel+API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JASidePanel+API.swift"; sourceTree = "<group>"; };
+		7535669B20A96356005A5E7A /* JASidePanelController+Gestures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JASidePanelController+Gestures.swift"; sourceTree = "<group>"; };
+		7535669C20A96356005A5E7A /* JASidePanelController+Lifecycle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JASidePanelController+Lifecycle.swift"; sourceTree = "<group>"; };
+		7535669D20A96356005A5E7A /* JASidePanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelController.swift; sourceTree = "<group>"; };
+		7535669E20A96356005A5E7A /* UIViewController+JASidePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+JASidePanel.swift"; sourceTree = "<group>"; };
+		753566A620A9C8F5005A5E7A /* Collection+FAPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+FAPanel.swift"; sourceTree = "<group>"; };
+		753566A720A9C8F5005A5E7A /* FAPanel+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAPanel+Animations.swift"; sourceTree = "<group>"; };
+		753566A820A9C8F5005A5E7A /* FAPanel+Gestures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAPanel+Gestures.swift"; sourceTree = "<group>"; };
+		753566A920A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAPanel+InterfaceRotation.swift"; sourceTree = "<group>"; };
+		753566AA20A9C8F5005A5E7A /* FAPanel+KVO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAPanel+KVO.swift"; sourceTree = "<group>"; };
+		753566AB20A9C8F5005A5E7A /* FAPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPanel.swift; sourceTree = "<group>"; };
+		753566AC20A9C8F5005A5E7A /* FAPanelConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPanelConfigurations.swift; sourceTree = "<group>"; };
+		753566AD20A9C8F5005A5E7A /* UIImage+FAPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+FAPanel.swift"; sourceTree = "<group>"; };
+		753566AE20A9C8F5005A5E7A /* UIView+FAPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+FAPanel.swift"; sourceTree = "<group>"; };
+		753566AF20A9C8F5005A5E7A /* UIViewController+FAPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+FAPanel.swift"; sourceTree = "<group>"; };
 		756FEFDD20A4842C00428D12 /* ContainerViewTesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContainerViewTesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		756FEFE020A4842C00428D12 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		756FEFE220A4842C00428D12 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		756FEFE520A4842C00428D12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		756FEFE720A4842C00428D12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		756FEFEA20A4842C00428D12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		756FEFEC20A4842C00428D12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75E73B1620A4864A00A08E0C /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
-		75F3225C20A4995100B1BE74 /* JASidePanelInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelInterface.swift; sourceTree = "<group>"; };
-		75F3225D20A4995100B1BE74 /* JASidePanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelController.swift; sourceTree = "<group>"; };
-		75F3225E20A4995100B1BE74 /* UIViewController+JASidePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+JASidePanel.swift"; sourceTree = "<group>"; };
 		BDCB1B0BA740F0BD77C43457 /* Pods-ContainerViewTesting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContainerViewTesting.release.xcconfig"; path = "Pods/Target Support Files/Pods-ContainerViewTesting/Pods-ContainerViewTesting.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,6 +78,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7535669920A96356005A5E7A /* JASidePanelsSwift */ = {
+			isa = PBXGroup;
+			children = (
+				7535669A20A96356005A5E7A /* JASidePanel+API.swift */,
+				7535669B20A96356005A5E7A /* JASidePanelController+Gestures.swift */,
+				7535669C20A96356005A5E7A /* JASidePanelController+Lifecycle.swift */,
+				7535669D20A96356005A5E7A /* JASidePanelController.swift */,
+				7535669E20A96356005A5E7A /* UIViewController+JASidePanel.swift */,
+			);
+			path = JASidePanelsSwift;
+			sourceTree = "<group>";
+		};
+		753566A420A9C8F5005A5E7A /* FAPanels */ = {
+			isa = PBXGroup;
+			children = (
+				753566A520A9C8F5005A5E7A /* Classes */,
+			);
+			path = FAPanels;
+			sourceTree = "<group>";
+		};
+		753566A520A9C8F5005A5E7A /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				753566A620A9C8F5005A5E7A /* Collection+FAPanel.swift */,
+				753566A720A9C8F5005A5E7A /* FAPanel+Animations.swift */,
+				753566A820A9C8F5005A5E7A /* FAPanel+Gestures.swift */,
+				753566A920A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift */,
+				753566AA20A9C8F5005A5E7A /* FAPanel+KVO.swift */,
+				753566AB20A9C8F5005A5E7A /* FAPanel.swift */,
+				753566AC20A9C8F5005A5E7A /* FAPanelConfigurations.swift */,
+				753566AD20A9C8F5005A5E7A /* UIImage+FAPanel.swift */,
+				753566AE20A9C8F5005A5E7A /* UIView+FAPanel.swift */,
+				753566AF20A9C8F5005A5E7A /* UIViewController+FAPanel.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		756FEFD420A4842C00428D12 = {
 			isa = PBXGroup;
 			children = (
@@ -70,8 +137,12 @@
 			isa = PBXGroup;
 			children = (
 				756FEFE020A4842C00428D12 /* AppDelegate.swift */,
-				75E73B1820A4868E00A08E0C /* JASidePanelsSwift */,
-				756FEFE220A4842C00428D12 /* ViewController.swift */,
+				7509AA3520A88E9200AE652B /* LeftSideVC.swift */,
+				7535669620A93C17005A5E7A /* LeftSideVC2.swift */,
+				7509AA3620A88E9200AE652B /* CenterVC.swift */,
+				7509AA3720A88E9200AE652B /* RightSideVC.swift */,
+				753566A420A9C8F5005A5E7A /* FAPanels */,
+				7535669920A96356005A5E7A /* JASidePanelsSwift */,
 				756FEFE420A4842C00428D12 /* Main.storyboard */,
 				756FEFE720A4842C00428D12 /* Assets.xcassets */,
 				756FEFE920A4842C00428D12 /* LaunchScreen.storyboard */,
@@ -87,16 +158,6 @@
 				75E73B1620A4864A00A08E0C /* UIView.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		75E73B1820A4868E00A08E0C /* JASidePanelsSwift */ = {
-			isa = PBXGroup;
-			children = (
-				75F3225C20A4995100B1BE74 /* JASidePanelInterface.swift */,
-				75F3225D20A4995100B1BE74 /* JASidePanelController.swift */,
-				75F3225E20A4995100B1BE74 /* UIViewController+JASidePanel.swift */,
-			);
-			path = JASidePanelsSwift;
 			sourceTree = "<group>";
 		};
 		AE490CB5DF2F3E23D62E2FE9 /* Pods */ = {
@@ -273,11 +334,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				756FEFE320A4842C00428D12 /* ViewController.swift in Sources */,
+				753566A020A96356005A5E7A /* JASidePanelController+Gestures.swift in Sources */,
+				753566B020A9C8F5005A5E7A /* Collection+FAPanel.swift in Sources */,
+				753566B820A9C8F5005A5E7A /* UIView+FAPanel.swift in Sources */,
+				753566B920A9C8F5005A5E7A /* UIViewController+FAPanel.swift in Sources */,
+				753566A320A96356005A5E7A /* UIViewController+JASidePanel.swift in Sources */,
 				75E73B1720A4864A00A08E0C /* UIView.swift in Sources */,
-				75F3226020A4995100B1BE74 /* JASidePanelController.swift in Sources */,
-				75F3226120A4995100B1BE74 /* UIViewController+JASidePanel.swift in Sources */,
-				75F3225F20A4995100B1BE74 /* JASidePanelInterface.swift in Sources */,
+				753566B720A9C8F5005A5E7A /* UIImage+FAPanel.swift in Sources */,
+				753566B120A9C8F5005A5E7A /* FAPanel+Animations.swift in Sources */,
+				753566B520A9C8F5005A5E7A /* FAPanel.swift in Sources */,
+				753566B220A9C8F5005A5E7A /* FAPanel+Gestures.swift in Sources */,
+				753566A220A96356005A5E7A /* JASidePanelController.swift in Sources */,
+				7535669F20A96356005A5E7A /* JASidePanel+API.swift in Sources */,
+				7509AA3A20A88E9300AE652B /* RightSideVC.swift in Sources */,
+				753566B320A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift in Sources */,
+				7509AA3920A88E9300AE652B /* CenterVC.swift in Sources */,
+				753566B620A9C8F5005A5E7A /* FAPanelConfigurations.swift in Sources */,
+				753566A120A96356005A5E7A /* JASidePanelController+Lifecycle.swift in Sources */,
+				7535669720A93C17005A5E7A /* LeftSideVC2.swift in Sources */,
+				7509AA3820A88E9300AE652B /* LeftSideVC.swift in Sources */,
+				753566B420A9C8F5005A5E7A /* FAPanel+KVO.swift in Sources */,
 				756FEFE120A4842C00428D12 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

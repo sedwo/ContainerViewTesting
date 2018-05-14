@@ -17,7 +17,8 @@ struct ScreenSize {
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var sidePanelController: JASidePanelController!
+    var sidePanelController: FAPanelController!
+//    var sidePanelController: JASidePanelController!
 
 
     override init() {
@@ -40,50 +41,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.tag = -1
 
 
+        sidePanelController = FAPanelController()
+        sidePanelController.configs.restrictPanningToTopVC = false
+//        sidePanelController.configs.pusheSidePanels = true
+        sidePanelController.configs.handleAutoRotation = false  // Leave it to iOS child VC management
 
+        sidePanelController.configs.resizeLeftPanel = true
+        sidePanelController.configs.resizeRightPanel = true
+
+        sidePanelController.configs.leftPanelWidth = 0
+        sidePanelController.configs.rightPanelWidth = 0
+        sidePanelController.configs.leftPanelGapPercentage = 0.5
+        sidePanelController.configs.rightPanelGapPercentage = 0.5
+
+        sidePanelController.leftPanelPosition = .front
+        sidePanelController.rightPanelPosition = .front
+
+        DDLogVerbose("set left VC")
+        _ = sidePanelController.left(UINavigationController(rootViewController: LeftSideVC()))
+
+        DDLogVerbose("set center VC")
+        _ = sidePanelController.center(UINavigationController(rootViewController: CenterVC()))
+
+        DDLogVerbose("set right VC")
+        _ = sidePanelController.right(UINavigationController(rootViewController: RightSideVC()))
+
+
+
+/*
         sidePanelController = JASidePanelController()
-        sidePanelController.shouldDelegateAutorotateToVisiblePanel = false
         sidePanelController.panningLimitedToTopViewController = false
+        sidePanelController.pushesSidePanels = true
+        sidePanelController.shouldDelegateAutorotateToVisiblePanel = false  // Leave it to iOS child VC management
 
+        DDLogVerbose("set left VC")
+        _ = sidePanelController.leftPanel = UINavigationController(rootViewController: LeftSideVC())
 
+        DDLogVerbose("set center VC")
+        _ = sidePanelController.centerPanel = UINavigationController(rootViewController: CenterVC())
 
-        let vc1 = ViewController()
-        vc1.view.tag = 2
-        sidePanelController.centerPanel = vc1
+        DDLogVerbose("set right VC")
+        _ = sidePanelController.rightPanel = UINavigationController(rootViewController: RightSideVC())
+*/
 
-        let vc2 = ViewController()
-        vc2.view.tag = 1
-        sidePanelController.leftPanel = vc2
-
-        let vc3 = ViewController()
-        vc3.view.tag = 3
-        sidePanelController.rightPanel = vc3
 
         self.window?.rootViewController = sidePanelController
         self.window?.makeKeyAndVisible()
 
 
-//        sidePanelController.showLeftPanel(animated: true)
-//        sidePanelController.hideCenterPanel()
-
-
-        // if iPad
-//        sidePanelController.style = .multipleActive
-/*
-        sidePanelController.allowLeftSwipe = false
-        sidePanelController.allowRightSwipe = false
-        sidePanelController.recognizesPanGesture = false
-
-//        sidePanelController.leftPanelContainer.isUserInteractionEnabled = true
-//        sidePanelController.centerPanelContainer.isUserInteractionEnabled = true
-//        sidePanelController.rightPanelContainer.isUserInteractionEnabled = true
-
-        sidePanelController.leftGapPercentage = 0.35
-        sidePanelController.rightGapPercentage = sidePanelController!.leftGapPercentage
-
-        sidePanelController.showLeftPanel(animated: true)
-        sidePanelController.showRightPanel(animated: true)
-*/
 
         DDLogInfo("")
 

@@ -8,7 +8,7 @@ import SnapKit
 extension JASidePanelController {
 
     // MARK: - Style
-
+/*
     func styleContainer(container: UIView, animate: Bool, duration: TimeInterval) {
         if styleContainerWithShadow {
             let shadowPath = UIBezierPath(roundedRect: container.bounds, cornerRadius: 0.0)
@@ -26,15 +26,17 @@ extension JASidePanelController {
             container.clipsToBounds = false
         }
     }
-
+*/
 
     func stylePanel(panel: UIView) {
+        DDLogInfo("")
 //        panel.layer.cornerRadius = 6.0
         panel.clipsToBounds = true
     }
 
 
     func configureContainers() {
+        DDLogInfo("")
         leftPanelContainer.autoresizingMask  = [.flexibleHeight, .flexibleRightMargin]
         rightPanelContainer.autoresizingMask = [.flexibleHeight, .flexibleLeftMargin]
         centerPanelContainer.frame = view.bounds
@@ -43,6 +45,8 @@ extension JASidePanelController {
 
 
     func layoutSideContainers(animate: Bool, duration: TimeInterval) {
+        DDLogInfo("")
+
         var leftFrame = view.bounds
         var rightFrame = view.bounds
 
@@ -57,18 +61,23 @@ extension JASidePanelController {
 
         } else if pushesSidePanels && !centerPanelHidden {
             leftFrame.origin.x = centerPanelContainer.frame.origin.x - leftVisibleWidth
+//            leftFrame.origin.x = 0
+//            leftFrame.size.width = leftVisibleWidth
+//            DDLogVerbose("leftFrame.origin.x = \(leftFrame.origin.x)")
             rightFrame.origin.x = centerPanelContainer.frame.origin.x + centerPanelContainer.frame.size.width
         }
 
         leftPanelContainer.frame = leftFrame
         rightPanelContainer.frame = rightFrame
 
-        styleContainer(container: leftPanelContainer, animate: animate, duration: duration)
-        styleContainer(container: rightPanelContainer, animate: animate, duration: duration)
+//        styleContainer(container: leftPanelContainer, animate: animate, duration: duration)
+//        styleContainer(container: rightPanelContainer, animate: animate, duration: duration)
     }
 
 
     func layoutSidePanels() {
+        DDLogInfo("")
+
         if leftPanel != nil {
             if leftPanel.isViewLoaded {
                 var frame = leftPanelContainer.bounds
@@ -98,6 +107,8 @@ extension JASidePanelController {
     // MARK: - Panels
 
     func swapCenter(previous: UIViewController, previousState: PanelState, with next: UIViewController) {
+        DDLogInfo("")
+
         if previous != next {
             previous.willMove(toParentViewController: nil)
             previous.view.removeFromSuperview()
@@ -116,6 +127,8 @@ extension JASidePanelController {
     // MARK: - Panel Buttons
 
     func placeButtonForLeftPanel() {
+        DDLogInfo("")
+
         if leftPanel != nil {
             var buttonController = centerPanel
 
@@ -134,219 +147,11 @@ extension JASidePanelController {
 
 
 
-    // MARK: - Gesture Recognizer Delegate
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer.view == tapView {
-            return true
-        } else if panningLimitedToTopViewController && !isOnTopLevelViewController(root: centerPanel) {
-            return false
-        } else if gestureRecognizer is UIPanGestureRecognizer {
-            let pan = (gestureRecognizer as! UIPanGestureRecognizer)
-            let translate = pan.translation(in: centerPanelContainer)
-            // determine if right swipe is allowed
-            if translate.x < 0 && !allowRightSwipe {
-                return false
-            }
-
-            // determine if left swipe is allowed
-            if translate.x > 0 && !allowLeftSwipe {
-                return false
-            }
-
-            let possible = translate.x != 0 && ((fabs(translate.y) / fabs(translate.x)) < 1.0)
-            if possible && ((translate.x > 0 && (leftPanel != nil)) || (translate.x < 0 && (rightPanel != nil))) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-
-
-    // MARK: - Pan Gestures
-
-    func addPanGestureToView(view: UIView) -> UIPanGestureRecognizer {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-
-        panGesture.delegate = self
-        panGesture.maximumNumberOfTouches = 1
-        panGesture.minimumNumberOfTouches = 1
-        view.addGestureRecognizer(panGesture)
-
-        return panGesture
-    }
-
-
-    @objc func handlePan(sender: UIGestureRecognizer) {
-        if !recognizesPanGesture {
-            return
-        }
-
-        if sender is UIPanGestureRecognizer {
-            let pan = sender as! UIPanGestureRecognizer
-            if pan.state == .began {
-                locationBeforePan = centerPanelContainer.frame.origin
-            }
-
-            let translate = pan.translation(in: centerPanelContainer)
-            var frame = centerPanelRestingFrame
-            frame.origin.x += round(correctMovement(movement: translate.x))
-
-            if mode == .multipleActive {
-                frame.size.width = view.bounds.size.width - frame.origin.x
-            }
-            centerPanelContainer.frame = frame
-
-            // if center panel has focus, make sure correct side panel is revealed
-            if state == .centerVisible {
-                if frame.origin.x > 0.0 {
-                    loadLeftPanel()
-                } else if frame.origin.x < 0.0 {
-                    loadRightPanel()
-                }
-            }
-
-            // adjust side panel locations, if needed
-            if mode == .multipleActive || pushesSidePanels {
-                layoutSideContainers(animate: false, duration: 0)
-            }
-
-            if sender.state == .ended {
-                let deltaX: CGFloat = frame.origin.x - locationBeforePan.x
-                if validateThreshold(movement: deltaX) {
-                    completePan(deltaX: deltaX)
-                } else {
-                    undoPan()
-                }
-            } else if sender.state == .cancelled {
-                undoPan()
-            }
-        }
-    }
-
-
-    func completePan(deltaX: CGFloat) {
-        switch state {
-        case .centerVisible:
-            if deltaX > 0 {
-                showLeftPanel(animated: true, bounce: bounceOnSidePanelOpen)
-            } else {
-                showRightPanel(animated: true, bounce: bounceOnSidePanelOpen)
-            }
-        case .leftVisible:
-            showCenterPanel(animated: true, bounce: bounceOnSidePanelClose)
-        case .rightVisible:
-            showCenterPanel(animated: true, bounce: bounceOnSidePanelClose)
-        case .unknown:
-            break
-        }
-    }
-
-
-    func undoPan() {
-        switch state {
-        case .centerVisible:
-            showCenterPanel(animated: true, bounce: false)
-        case .leftVisible:
-            showLeftPanel(animated: true, bounce: false)
-        case .rightVisible:
-            showRightPanel(animated: true, bounce: false)
-        case .unknown:
-            break
-        }
-    }
-
-
-    // MARK: - Tap Gesture
-
-    func addTapGestureToView(view: UIView) -> UITapGestureRecognizer {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(centerPanelTapped))
-        view.addGestureRecognizer(tapGesture)
-
-        return tapGesture
-    }
-
-
-    @objc func centerPanelTapped(gesture: UIGestureRecognizer) {
-        showCenterPanel(animated: true, bounce: false)
-    }
-
-
-
-    // MARK: - Internal Methods
-
-    func correctMovement(movement: CGFloat) -> CGFloat {
-        let position: CGFloat = centerPanelRestingFrame.origin.x + movement
-
-        if state == .centerVisible {
-            if (position > 0.0 && leftPanel == nil) || (position < 0.0 && rightPanel == nil) {
-                return 0.0
-            } else if !allowLeftOverpan && position > leftVisibleWidth {
-                return leftVisibleWidth
-            } else if !allowRightOverpan && position < -rightVisibleWidth {
-                return -rightVisibleWidth
-            }
-
-        } else if state == .rightVisible && !allowRightOverpan {
-            if position < -rightVisibleWidth {
-                return 0.0
-            } else if (mode == .multipleActive || pushesSidePanels) && position > 0.0 {
-                return -centerPanelRestingFrame.origin.x
-            } else if position > rightPanelContainer.frame.origin.x {
-                return rightPanelContainer.frame.origin.x - centerPanelRestingFrame.origin.x
-            }
-
-        } else if state == .leftVisible && !allowLeftOverpan {
-            if position > leftVisibleWidth {
-                return 0.0
-            } else if (mode == .multipleActive || pushesSidePanels) && position < 0.0 {
-                return -centerPanelRestingFrame.origin.x
-            } else if position < leftPanelContainer.frame.origin.x {
-                return leftPanelContainer.frame.origin.x - centerPanelRestingFrame.origin.x
-            }
-        }
-
-        return movement
-    }
-
-
-    func validateThreshold(movement: CGFloat) -> Bool {
-        let minimum: CGFloat = floor(view.bounds.size.width * minimumMovePercentage)
-
-        switch state {
-        case .leftVisible:
-            return movement <= -minimum
-        case .centerVisible:
-            return fabs(movement) >= minimum
-        case .rightVisible:
-            return movement >= minimum
-        case .unknown:
-            break
-        }
-
-        return false
-    }
-
-
-    func isOnTopLevelViewController(root: UIViewController) -> Bool {
-        if root is UINavigationController {
-            let nav = root as! UINavigationController
-            return nav.viewControllers.count == 1
-        } else if root is UITabBarController {
-            let tab = root as! UITabBarController
-            return isOnTopLevelViewController(root: tab.selectedViewController!)
-        }
-
-        return true
-    }
-
-
-
     // MARK: - Loading Panels
 
     func loadCenterPanelWithPreviousState(previousState: PanelState) {
+        DDLogInfo("")
+
         placeButtonForLeftPanel()
 
         // for the multi-active style, it looks better if the new center starts out in it's fullsize and slides in
@@ -375,6 +180,8 @@ extension JASidePanelController {
 
 
     func loadLeftPanel() {
+        DDLogInfo("")
+
         rightPanelContainer.isHidden = true
 
         if leftPanelContainer.isHidden && leftPanel != nil {
@@ -391,6 +198,8 @@ extension JASidePanelController {
 
 
     func loadRightPanel() {
+        DDLogInfo("")
+
         leftPanelContainer.isHidden = true
 
         if rightPanelContainer.isHidden && rightPanel != nil {
@@ -406,6 +215,8 @@ extension JASidePanelController {
 
 
     func unloadPanelsFromView() {
+        DDLogInfo("")
+
         if canUnloadLeftPanel && leftPanel.isViewLoaded {
             leftPanel.view.removeFromSuperview()
         }
@@ -418,6 +229,8 @@ extension JASidePanelController {
     // MARK: - Animation
 
     func calculatedDuration() -> CGFloat {
+        DDLogInfo("")
+
         let remaining = fabs(centerPanelContainer.frame.origin.x - centerPanelRestingFrame.origin.x)
         let max = locationBeforePan.x == centerPanelRestingFrame.origin.x ? remaining : fabs(locationBeforePan.x - centerPanelRestingFrame.origin.x)
         return max > 0.0 ? maximumAnimationDuration * (remaining / max) : maximumAnimationDuration
@@ -425,6 +238,8 @@ extension JASidePanelController {
 
 
     func animateCenterPanel(shouldBounce: Bool, completion: @escaping (_ finished: Bool) -> Void) {
+        DDLogInfo("")
+
         var shouldBounces = shouldBounce
         let bounceDistance: CGFloat = (centerPanelRestingFrame.origin.x - centerPanelContainer.frame.origin.x) * bouncePercentage
 
@@ -439,7 +254,7 @@ extension JASidePanelController {
                        options: [.curveLinear, .layoutSubviews],
                        animations: { [unowned self] () -> Void in
             self.centerPanelContainer.frame = self.centerPanelRestingFrame
-            self.styleContainer(container: self.centerPanelContainer, animate: true, duration: TimeInterval(duration))
+//            self.styleContainer(container: self.centerPanelContainer, animate: true, duration: TimeInterval(duration))
             if self.mode == .multipleActive || self.pushesSidePanels {
                 self.layoutSideContainers(animate: false, duration: 0.0)
             }
@@ -480,6 +295,8 @@ extension JASidePanelController {
     // MARK: - Panel Sizing
 
     func adjustCenterFrame() -> CGRect {
+        DDLogInfo("")
+
         var frame = view.bounds
 
         switch state {
@@ -512,6 +329,8 @@ extension JASidePanelController {
     // MARK: - Showing Panels
 
     func showLeftPanel(animated: Bool, bounce shouldBounce: Bool) {
+        DDLogInfo("")
+
         state = .leftVisible
         loadLeftPanel()
         _ = adjustCenterFrame()
@@ -520,7 +339,7 @@ extension JASidePanelController {
             animateCenterPanel(shouldBounce: shouldBounce, completion: { _ in })
         } else {
             centerPanelContainer.frame = centerPanelRestingFrame
-            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
+//            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
             if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
@@ -536,6 +355,8 @@ extension JASidePanelController {
 
 
     func showRightPanel(animated: Bool, bounce shouldBounce: Bool) {
+        DDLogInfo("")
+
         state = .rightVisible
         loadRightPanel()
         _ = adjustCenterFrame()
@@ -544,7 +365,7 @@ extension JASidePanelController {
             animateCenterPanel(shouldBounce: shouldBounce, completion: { _ in })
         } else {
             centerPanelContainer.frame = centerPanelRestingFrame
-            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
+//            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
             if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
@@ -560,6 +381,8 @@ extension JASidePanelController {
 
 
     func showCenterPanel(animated: Bool, bounce shouldBounce: Bool) {
+        DDLogInfo("")
+
         state = .centerVisible
         _ = adjustCenterFrame()
 
@@ -571,7 +394,7 @@ extension JASidePanelController {
             })
         } else {
             centerPanelContainer.frame = centerPanelRestingFrame
-            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
+//            styleContainer(container: centerPanelContainer, animate: false, duration: 0.0)
 
             if mode == .multipleActive || pushesSidePanels {
                 layoutSideContainers(animate: false, duration: 0.0)
@@ -588,6 +411,8 @@ extension JASidePanelController {
 
 
     func hideCenterPanel() {
+        DDLogInfo("")
+
         centerPanelContainer.isHidden = true
 
         if centerPanel.isViewLoaded {
@@ -597,6 +422,8 @@ extension JASidePanelController {
 
 
     func unhideCenterPanel() {
+        DDLogInfo("")
+
         centerPanelContainer.isHidden = false
 
         if !(centerPanel.view.superview != nil) {
@@ -609,6 +436,8 @@ extension JASidePanelController {
 
 
     func toggleScrollsToTopForCenter(center: Bool, left: Bool, right: Bool) {
+        DDLogInfo("")
+
         // iPhone only supports 1 active UIScrollViewController at a time
         if device.isPhone {
             _ = toggleScrollsToTop(enabled: center, forView: centerPanelContainer)
@@ -619,6 +448,8 @@ extension JASidePanelController {
 
 
     func toggleScrollsToTop(enabled: Bool, forView view: UIView) -> Bool {
+//        DDLogInfo("")
+
         if view is UIScrollView {
             let scrollView = (view as! UIScrollView)
             scrollView.scrollsToTop = enabled
@@ -640,6 +471,7 @@ extension JASidePanelController {
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?,
                                     change: [NSKeyValueChangeKey: Any]?,
                                     context: UnsafeMutableRawPointer?) {
+        DDLogInfo("")
         if context == ja_kvoContext {
             if keyPath! == "view" {
                 if centerPanel.isViewLoaded && recognizesPanGesture {
@@ -655,73 +487,8 @@ extension JASidePanelController {
     }
 
 
-    // MARK: - Public Methods
-
-    func leftButtonForCenterPanel() -> UIBarButtonItem {
-        return UIBarButtonItem(image: JASidePanelController.defaultImage,
-                               style: .plain,
-                               target: self,
-                               action: #selector(toggleLeftPanel))
-    }
-
-
-    public func showLeftPanel(animated: Bool) {
-        showLeftPanelAnimated(animated: animated)
-    }
-
-
-    public func showRightPanel(animated: Bool) {
-        showRightPanelAnimated(animated: animated)
-    }
-
-
-    public func showCenterPanel(animated: Bool) {
-        showCenterPanelAnimated(animated: animated)
-    }
-
-
-    public func showLeftPanelAnimated(animated: Bool) {
-        showLeftPanel(animated: animated, bounce: false)
-    }
-
-
-    public func showRightPanelAnimated(animated: Bool) {
-        showRightPanel(animated: animated, bounce: false)
-    }
-
-
-    func showCenterPanelAnimated(animated: Bool) {
-        // make sure center panel isn't hidden
-        if centerPanelHidden {
-            centerPanelHidden = false
-            unhideCenterPanel()
-        }
-
-        showCenterPanel(animated: animated, bounce: false)
-    }
-
-
-    @objc func toggleLeftPanel(sender: AnyObject) {
-        if state == .leftVisible {
-            showCenterPanel(animated: true, bounce: false)
-        } else if state == .centerVisible {
-            showLeftPanel(animated: true, bounce: false)
-        }
-
-    }
-
-
-    func toggleRightPanel(sender: AnyObject) {
-        if state == .rightVisible {
-            showCenterPanel(animated: true, bounce: false)
-        } else if state == .centerVisible {
-            showRightPanel(animated: true, bounce: false)
-        }
-
-    }
-
-
     func setCenterPanelHidden(isHidden: Bool, animated: Bool, duration: TimeInterval) {
+        DDLogInfo("")
         if isHidden != centerPanelHidden && state != .centerVisible {
             centerPanelHidden = isHidden
             let duration = animated ? duration : 0.0
