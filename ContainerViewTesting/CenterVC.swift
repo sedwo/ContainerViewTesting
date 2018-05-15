@@ -40,8 +40,6 @@ class CenterVC: FormViewController {
 
         self.tableView.backgroundColor = tvColour
 
-        panel?.panelStateDelegate = self
-
     }
 
 

@@ -76,11 +76,12 @@ open class FAPanelConfigurations: NSObject {
 
     open var cornerRadius: CGFloat = 0.0
 
-    // Shadow configurations
+    // Shadow configurations for side panels
 
+    open var showShadowUnderSidePanels: Bool = true
     open var shadowColor: CGColor = UIColor.black.cgColor
     open var shadowOffset: CGSize  = CGSize(width: 5.0, height: 0.0)
-    open var shadowOppacity: Float = 0.7
+    open var shadowOpacity: Float = 0.7
 
     // Remove panels from super view when possible
 
@@ -104,12 +105,12 @@ open class FAPanelConfigurations: NSObject {
     // Display a dakr overlay over the center panel when leftpanelposition = .front
 
     open var showDarkOverlayUnderLeftPanelOnTop: Bool = true
-    open var darkOverlayUnderLeftPanelOnTopColor: UIColor = UIColor.black.withAlphaComponent(0.5)
+    open var darkOverlayUnderLeftPanelOnTopColor: UIColor = UIColor.black.withAlphaComponent(0.35)
 
     // Display a dakr overlay over the center panel when rightpanelposition = .front
 
     open var showDarkOverlayUnderRightPanelOnTop: Bool = true
-    open var darkOverlayUnderRightPanelOnTopColor: UIColor = UIColor.black.withAlphaComponent(0.5)
+    open var darkOverlayUnderRightPanelOnTopColor: UIColor = UIColor.black.withAlphaComponent(0.35)
 
 }
 
@@ -142,7 +143,6 @@ public enum FAPanelTransitionType: UInt {
     boxFade
 
     func transitionOption() -> Any {
-
         switch self {
 
         case .flipFromLeft:

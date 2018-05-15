@@ -121,12 +121,22 @@ open class FAPanelController: UIViewController {
     override open func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        let shadowPath = UIBezierPath(rect: leftPanelContainer.bounds)
-        leftPanelContainer.layer.masksToBounds = false
-        leftPanelContainer.layer.shadowColor = configs.shadowColor
-        leftPanelContainer.layer.shadowOffset = configs.shadowOffset
-        leftPanelContainer.layer.shadowOpacity = configs.shadowOppacity
-        leftPanelContainer.layer.shadowPath = shadowPath.cgPath
+        if configs.showShadowUnderSidePanels {
+            var shadowPath = UIBezierPath(rect: leftPanelContainer.bounds)
+            leftPanelContainer.layer.masksToBounds = false
+            leftPanelContainer.layer.shadowColor = configs.shadowColor
+            leftPanelContainer.layer.shadowOffset = configs.shadowOffset
+            leftPanelContainer.layer.shadowOpacity = configs.shadowOpacity
+            leftPanelContainer.layer.shadowPath = shadowPath.cgPath
+
+            shadowPath = UIBezierPath(rect: rightPanelContainer.bounds)
+            rightPanelContainer.layer.masksToBounds = leftPanelContainer.layer.masksToBounds
+            rightPanelContainer.layer.shadowColor = leftPanelContainer.layer.shadowColor
+            rightPanelContainer.layer.shadowOffset = CGSize(width: -configs.shadowOffset.width,
+                                                            height: configs.shadowOffset.height)
+            rightPanelContainer.layer.shadowOpacity = leftPanelContainer.layer.shadowOpacity
+            rightPanelContainer.layer.shadowPath = shadowPath.cgPath
+        }
     }
 
     deinit {

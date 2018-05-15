@@ -101,13 +101,13 @@
 		753566A520A9C8F5005A5E7A /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				753566AC20A9C8F5005A5E7A /* FAPanelConfigurations.swift */,
+				753566AB20A9C8F5005A5E7A /* FAPanel.swift */,
 				753566A620A9C8F5005A5E7A /* Collection+FAPanel.swift */,
 				753566A720A9C8F5005A5E7A /* FAPanel+Animations.swift */,
 				753566A820A9C8F5005A5E7A /* FAPanel+Gestures.swift */,
 				753566A920A9C8F5005A5E7A /* FAPanel+InterfaceRotation.swift */,
 				753566AA20A9C8F5005A5E7A /* FAPanel+KVO.swift */,
-				753566AB20A9C8F5005A5E7A /* FAPanel.swift */,
-				753566AC20A9C8F5005A5E7A /* FAPanelConfigurations.swift */,
 				753566AD20A9C8F5005A5E7A /* UIImage+FAPanel.swift */,
 				753566AE20A9C8F5005A5E7A /* UIView+FAPanel.swift */,
 				753566AF20A9C8F5005A5E7A /* UIViewController+FAPanel.swift */,
